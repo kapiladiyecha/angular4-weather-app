@@ -27,7 +27,7 @@ import {MaterialComponentsModule} from "./material-components/material-component
     RoutingModule,
     BrowserAnimationsModule,
     CoreModule,
-    MaterialComponentsModule
+    MaterialComponentsModule,
   ],
   providers: [MdIconRegistry],
   bootstrap: [AppComponent]
