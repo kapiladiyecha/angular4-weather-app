@@ -54,7 +54,13 @@
     }
   },
   "defaults": {
-    "styleExt": "css",
-    "component": {}
+    "styleExt": "scss",
+    "component": {
+      "inlineTemplate": false,
+      "spec": true
+    },
+    "serve" : {
+      "port" : 4300
+    }
   }
 }
