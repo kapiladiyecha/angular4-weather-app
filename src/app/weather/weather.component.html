@@ -1,3 +1,239 @@
-<md-card>
-  weather works!
+<md-progress-bar mode="indeterminate" *ngIf="isLoading"></md-progress-bar>
+<md-card *ngIf="currentLocation && currentLocation.formatted_address && weatherDetails">
+  <md-card-content fxLayout="column">
+    <div fxLayout="row">
+
+      <div fxFlex="15%">
+        <h1>{{weatherDetails.consolidated_weather[0].the_temp}} <span [innerHTML]="tempFactor"></span></h1>
+        <form [formGroup]="locationForm" class="example-form">
+          <md-form-field class="example-full-width">
+            <input mdInput placeholder="Location" id="txtPlaces" (change)="onLocationChange()"
+                   formControlName="location">
+          </md-form-field>
+        </form>
+        <h5><span class="small-title">Sun rise :</span> {{weatherDetails.sun_rise | date:'medium'}}</h5>
+        <h5><span class="small-title">Sun set :</span> {{weatherDetails.sun_set | date:'medium'}}</h5>
+
+        <div>
+          <button mdTooltip="Save this location" mdTooltipPosition="above" md-mini-fab color="primary"
+                  (click)="saveLocation()">
+            <md-icon>save</md-icon>
+          </button>
+          <button mdTooltip="Toggle Temperature" mdTooltipPosition="above" md-mini-fab color="primary"
+                  (click)="toggleTemperature()">
+            <md-icon>compare_arrows</md-icon>
+          </button>
+          <button mdTooltip="Refresh Now" mdTooltipPosition="above" md-mini-fab color="primary">
+            <md-icon>refresh</md-icon>
+          </button>
+          <button mdTooltip="Next 5 days prediction" mdTooltipPosition="above" md-mini-fab color="primary"
+                  (click)="togglePrediction()">
+            <md-icon>settings_remote</md-icon>
+          </button>
+        </div>
+
+      </div>
+      <div fxFlex fxLayoutAlign="end" *ngIf="!isForecast">
+
+        <table class="tbl-weather-details">
+          <thead>
+          <tr>
+            <th>Properties</th>
+            <th>{{weatherDetails.consolidated_weather[0].applicable_date}}</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr>
+            <td>air_pressure</td>
+            <td>{{weatherDetails.consolidated_weather[0].air_pressure | number : '1.2-2'}}</td>
+          </tr>
+          <!--<tr>
+            <td>applicable_date</td>
+            <td>{{weatherDetails.consolidated_weather[0].applicable_date}}</td>
+          </tr>-->
+          <!--<tr>
+            <td>created</td>
+            <td>{{weatherDetails.consolidated_weather[0].created | date:'medium'}}</td>
+          </tr>-->
+          <tr>
+            <td>humidity</td>
+            <td>{{weatherDetails.consolidated_weather[0].humidity}}</td>
+          </tr>
+          <tr>
+            <td>max_temp</td>
+            <td>{{weatherDetails.consolidated_weather[0].max_temp | number : '1.2-2'}}</td>
+          </tr>
+          <tr>
+            <td>min_temp</td>
+            <td>{{weatherDetails.consolidated_weather[0].min_temp | number : '1.2-2'}}</td>
+          </tr>
+          <tr>
+            <td>predictability</td>
+            <td>{{weatherDetails.consolidated_weather[0].predictability}}</td>
+          </tr>
+          <tr>
+            <td>the_temp</td>
+            <td>{{weatherDetails.consolidated_weather[0].the_temp}}</td>
+          </tr>
+          <tr>
+            <td>visibility</td>
+            <td>{{weatherDetails.consolidated_weather[0].visibility | number : '1.2-2'}}</td>
+          </tr>
+          <tr>
+            <td>weather_state_abbr</td>
+            <td>{{weatherDetails.consolidated_weather[0].weather_state_abbr}}</td>
+          </tr>
+          <tr>
+            <td>weather_state_name</td>
+            <td>{{weatherDetails.consolidated_weather[0].weather_state_name}}</td>
+          </tr>
+          <tr>
+            <td>wind_direction</td>
+            <td>{{weatherDetails.consolidated_weather[0].wind_direction | number : '1.2-2'}}</td>
+          </tr>
+          <tr>
+            <td>wind_direction_compass</td>
+            <td>{{weatherDetails.consolidated_weather[0].wind_direction_compass}}</td>
+          </tr>
+          <tr>
+            <td>wind_speed</td>
+            <td>{{weatherDetails.consolidated_weather[0].wind_speed | number : '1.2-2'}}</td>
+          </tr>
+          </tbody>
+        </table>
+
+      </div>
+      <div fxFlex *ngIf="isForecast" fxLayoutAlign="end">
+
+        <table class="tbl-weather-details">
+          <thead>
+          <tr>
+            <th>Properties</th>
+            <th>{{weatherDetails.consolidated_weather[0].applicable_date}}</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr>
+            <td>air_pressure</td>
+            <td>{{weatherDetails.consolidated_weather[0].air_pressure | number : '1.2-2'}}</td>
+          </tr>
+          <!--<tr>
+            <td>applicable_date</td>
+            <td>{{weatherDetails.consolidated_weather[0].applicable_date}}</td>
+          </tr>-->
+          <!-- <tr>
+             <td>created</td>
+             <td>{{weatherDetails.consolidated_weather[0].created | date:'medium'}}</td>
+           </tr>-->
+          <tr>
+            <td>humidity</td>
+            <td>{{weatherDetails.consolidated_weather[0].humidity}}</td>
+          </tr>
+          <tr>
+            <td>max_temp</td>
+            <td>{{weatherDetails.consolidated_weather[0].max_temp | number : '1.2-2'}}</td>
+          </tr>
+          <tr>
+            <td>min_temp</td>
+            <td>{{weatherDetails.consolidated_weather[0].min_temp | number : '1.2-2'}}</td>
+          </tr>
+          <tr>
+            <td>predictability</td>
+            <td>{{weatherDetails.consolidated_weather[0].predictability}}</td>
+          </tr>
+          <tr>
+            <td>the_temp</td>
+            <td>{{weatherDetails.consolidated_weather[0].the_temp}}</td>
+          </tr>
+          <tr>
+            <td>visibility</td>
+            <td>{{weatherDetails.consolidated_weather[0].visibility | number : '1.2-2'}}</td>
+          </tr>
+          <tr>
+            <td>weather_state_abbr</td>
+            <td>{{weatherDetails.consolidated_weather[0].weather_state_abbr}}</td>
+          </tr>
+          <tr>
+            <td>weather_state_name</td>
+            <td>{{weatherDetails.consolidated_weather[0].weather_state_name}}</td>
+          </tr>
+          <tr>
+            <td>wind_direction</td>
+            <td>{{weatherDetails.consolidated_weather[0].wind_direction | number : '1.2-2'}}</td>
+          </tr>
+          <tr>
+            <td>wind_direction_compass</td>
+            <td>{{weatherDetails.consolidated_weather[0].wind_direction_compass}}</td>
+          </tr>
+          <tr>
+            <td>wind_speed</td>
+            <td>{{weatherDetails.consolidated_weather[0].wind_speed | number : '1.2-2'}}</td>
+          </tr>
+          </tbody>
+        </table>
+        <table class="tbl-weather-details" *ngFor="let predWeather of weatherDetails.consolidated_weather | slice:1">
+          <thead>
+          <tr>
+            <th>{{predWeather.applicable_date}}</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr>
+            <td>{{predWeather.air_pressure}}</td>
+          </tr>
+          <!--<tr>
+            <td>applicable_date</td>
+            <td>{{predWeather.applicable_date}}</td>
+          </tr>-->
+          <!--<tr>
+            <td>{{predWeather.created | date:'medium'}}</td>
+          </tr>-->
+          <tr>
+            <td>{{predWeather.humidity}}</td>
+          </tr>
+
+          <tr>
+            <td>{{predWeather.max_temp | number : '1.2-2'}}</td>
+          </tr>
+          <tr>
+            <td>{{predWeather.min_temp | number : '1.2-2'}}</td>
+          </tr>
+          <tr>
+            <td>{{predWeather.predictability}}</td>
+          </tr>
+          <tr>
+            <td>{{predWeather.the_temp | number : '1.2-2'}}</td>
+          </tr>
+          <tr>
+            <td>{{predWeather.visibility || '0' | number : '1.2-2'}}</td>
+          </tr>
+          <tr>
+            <td>{{predWeather.weather_state_abbr}}</td>
+          </tr>
+          <tr>
+            <td>{{predWeather.weather_state_name}}</td>
+          </tr>
+          <tr>
+            <td>{{predWeather.wind_direction | number : '1.2-2'}}</td>
+          </tr>
+          <tr>
+            <td>{{predWeather.wind_direction_compass}}</td>
+          </tr>
+          <tr>
+            <td>{{predWeather.wind_speed | number : '1.2-2'}}</td>
+          </tr>
+          </tbody>
+        </table>
+
+      </div>
+
+    </div>
+
+    <br/>
+    <div fxLayout="row" fxLayoutAlign="end">
+      <span style="font-size: 11px;">Your location:{{currentLocation.formatted_address}}</span>
+    </div>
+  </md-card-content>
 </md-card>
+<br/>
+<br/>

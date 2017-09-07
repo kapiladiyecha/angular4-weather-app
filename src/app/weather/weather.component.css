@@ -1,0 +1,22 @@
+.mat-form-field {
+  width: 280px; }
+
+.tbl-weather-details {
+  font-size: 11px;
+  background: rgba(0, 0, 0, 0.63);
+  color: #FFF;
+  padding: 10px; }
+  .tbl-weather-details tr, .tbl-weather-details td {
+    text-align: left; }
+  .tbl-weather-details th {
+    font-size: 14px;
+    font-weight: 400;
+    padding-bottom: 10px;
+    text-decoration: underline; }
+
+.mat-progress-bar {
+  position: absolute;
+  top: 0px;
+  left: 0px; }
+
+/*# sourceMappingURL=weather.component.css.map */

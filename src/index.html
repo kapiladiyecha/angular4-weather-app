@@ -7,11 +7,23 @@
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="icon" type="image/x-icon" href="favicon.ico">
+  <meta name="msapplication-TileColor" content="#ffffff">
+  <meta name="msapplication-TileImage" content="/ms-icon-144x144.png">
+  <meta name="theme-color" content="#ffffff">
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
   <link href="assets/weather-icons-master/css/weather-icons.min.css" rel="stylesheet"/>
   <link href="assets/weather-icons-master/css/weather-icons-wind.min.css" rel="stylesheet"/>
 </head>
 <body>
 <app-root></app-root>
+<script type="text/javascript">
+
+  function initMap() {
+    console.log('Map API loaded');
+  }
+
+</script>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBDpjNRAWD23GjXkmQO8B0MsHZHJUP4DVQ&libraries=places&callback=initMap">
+</script>
 </body>
 </html>
