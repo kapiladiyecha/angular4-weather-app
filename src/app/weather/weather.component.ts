@@ -14,9 +14,9 @@ import {WeatherService} from "./weather.service";
 export class WeatherComponent implements OnInit, AfterViewInit {
 
   google: any;
-  locations: any;
-  locationDetails: any;
+  locations: any[];
   weatherDetails: any;
+  locationAutocomplete: any;
   locationForm: FormGroup;
   currentLocation: any;
   tempFactor = "&deg; C";
@@ -32,7 +32,9 @@ export class WeatherComponent implements OnInit, AfterViewInit {
     this.google = window["google"];
     this.createFormControl();
     this.setCurrentLocation();
-    this.initAutoComplete();
+    // this.initAutoComplete();
+    this.locations = this.weatherService.getAllLocation();
+    window['weatherComponent'] = this;
   }
 
   createFormControl() {
@@ -67,10 +69,10 @@ export class WeatherComponent implements OnInit, AfterViewInit {
     if (typeof(element) == 'undefined' || element == null)
       return;
     // this.google.maps.event.addDomListener(window, 'load', function () {
-    var places = new this.google.maps.places.Autocomplete(element);
-    var data = {places: places, weatherComponent: this};
-    this.google.maps.event.addListener(places, 'place_changed', () => {
-      var place = places.getPlace();
+    this.locationAutocomplete = new this.google.maps.places.Autocomplete(element);
+    window['weatherComponentLA'] = this.locationAutocomplete;
+    this.google.maps.event.addListener(this.locationAutocomplete, 'place_changed', () => {
+      var place = this.locationAutocomplete.getPlace();
       var address = place.formatted_address;
       var latitude = place.geometry.location.lat();
       var longitude = place.geometry.location.lng();
@@ -79,16 +81,28 @@ export class WeatherComponent implements OnInit, AfterViewInit {
       mesg += "\nLongitude: " + longitude;
       console.log(mesg);
 
-      this.weatherService.getWoeByLatLong(latitude + "," + longitude).subscribe(result => {
+      window['weatherComponent'].isLoading = true;
+      window['weatherComponent'].patchDigest();
+
+      window['weatherComponent'].weatherService.getWoeByLatLong(latitude + "," + longitude).subscribe(result => {
         if (result && result.length > 0) {
-          this.weatherService.getWeatherByWoeId(result[0]['woeid']).subscribe(result => {
-            this.weatherDetails = result;
-            this.isLoading = false;
+          window['weatherComponent'].weatherService.getWeatherByWoeId(result[0]['woeid']).subscribe(result => {
+            window['weatherComponent'].setWeatherDetails(result);
           });
         }
       });
     });
     // });
+  }
+
+  /**
+   *
+   * @param details
+   */
+  setWeatherDetails(details) {
+    this.weatherDetails = details;
+    this.isLoading = false;
+    this.patchDigest();
   }
 
 
@@ -114,8 +128,18 @@ export class WeatherComponent implements OnInit, AfterViewInit {
     });
   }
 
-  onLocationChange() {
-    console.log()
+  onLocationChange(weatherService, location) {
+    this.currentLocation = location.value;
+    let latitude = this.currentLocation.geometry.location.lat() || this.currentLocation.geometry.location.lat;
+    let longitude = this.currentLocation.geometry.location.lng() || this.currentLocation.geometry.location.lng;
+    weatherService.getWoeByLatLong(latitude + "," + longitude).subscribe(result => {
+      if (result && result.length > 0) {
+        this.weatherService.getWeatherByWoeId(result[0]['woeid']).subscribe(result => {
+          this.weatherDetails = result;
+          this.isLoading = false;
+        });
+      }
+    });
   }
 
   ngAfterViewInit() {
@@ -127,7 +151,9 @@ export class WeatherComponent implements OnInit, AfterViewInit {
   }
 
   saveLocation() {
-    this.weatherService.addLocation(this.location);
+    this.location.setValue((document.getElementById('txtPlaces')  as HTMLTextAreaElement).value);
+    this.weatherService.addLocation(this.location.value);
+    this.locations = this.weatherService.getAllLocation();
   }
 
   removeLocation(index) {
@@ -136,6 +162,16 @@ export class WeatherComponent implements OnInit, AfterViewInit {
 
   toggleTemperature() {
 
+  }
+
+  getWeatherByLocation(location) {
+    this.location.setValue(location);
+    this.google.maps.event.trigger(window['weatherComponentLA'], 'place_changed');
+  }
+
+  patchDigest() {
+    document.getElementById('txtPlaces').blur();
+    document.getElementById('txtPlaces').focus();
   }
 
 }

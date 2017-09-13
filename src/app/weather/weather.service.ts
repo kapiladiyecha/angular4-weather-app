@@ -22,8 +22,9 @@ export class WeatherService {
    * @returns {any[]}
    */
   addLocation(locationTitle): any[] {
+    debugger;
     let locations = [];
-    if (this._cacheService.exists("locations")) {
+    if (this._cacheService.exists("location")) {
       locations = this._cacheService.get('location');
     }
     if(locations.indexOf(locationTitle) == -1){

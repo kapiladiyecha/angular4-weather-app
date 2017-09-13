@@ -4,10 +4,10 @@
     <div fxLayout="row">
 
       <div fxFlex="15%">
-        <h1>{{weatherDetails.consolidated_weather[0].the_temp}} <span [innerHTML]="tempFactor"></span></h1>
-        <form [formGroup]="locationForm" class="example-form">
+        <h1>{{weatherDetails.consolidated_weather[0].the_temp | number : '1.2-2'}} <span [innerHTML]="tempFactor"></span></h1>
+        <form [formGroup]="locationForm" id="locationForm" class="example-form">
           <md-form-field class="example-full-width">
-            <input mdInput placeholder="Location" id="txtPlaces" (change)="onLocationChange()"
+            <input mdInput placeholder="Location" id="txtPlaces"
                    formControlName="location">
           </md-form-field>
         </form>
@@ -179,7 +179,7 @@
           </thead>
           <tbody>
           <tr>
-            <td>{{predWeather.air_pressure}}</td>
+            <td>{{predWeather.air_pressure | number : '1.2-2'}}</td>
           </tr>
           <!--<tr>
             <td>applicable_date</td>
@@ -237,3 +237,17 @@
 </md-card>
 <br/>
 <br/>
+<md-card>
+  <md-card-content>
+    <div>
+      <table>
+        <tbody>
+        <tr *ngFor="let location of locations">
+          <td><i (click)="getWeatherByLocation(location)" class="material-icons cursor-pointer" mdTooltipPosition="right" mdTooltip="Hows weather at {{location}}?">remove_red_eye</i></td>
+          <td>{{location}}</td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+  </md-card-content>
+</md-card>
