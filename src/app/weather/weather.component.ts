@@ -19,6 +19,7 @@ export class WeatherComponent implements OnInit, AfterViewInit {
   locationAutocomplete: any;
   locationForm: FormGroup;
   currentLocation: any;
+  loadedLocation: any;
   tempFactor = "&deg; C";
   isForecast = true;
   location = new FormControl('', Validators.required);
@@ -81,6 +82,7 @@ export class WeatherComponent implements OnInit, AfterViewInit {
       mesg += "\nLongitude: " + longitude;
       console.log(mesg);
 
+      window['weatherComponent'].loadedLocation = place;
       window['weatherComponent'].isLoading = true;
       window['weatherComponent'].patchDigest();
 
@@ -117,6 +119,7 @@ export class WeatherComponent implements OnInit, AfterViewInit {
       if (status === 'OK') {
         if (results[0]) {
           console.log(results);
+          this.loadedLocation = results[0];
           this.currentLocation = results[0];
           this.locationForm.patchValue({location: results[0].formatted_address});
         } else {
@@ -128,11 +131,17 @@ export class WeatherComponent implements OnInit, AfterViewInit {
     });
   }
 
-  onLocationChange(weatherService, location) {
-    this.currentLocation = location.value;
-    let latitude = this.currentLocation.geometry.location.lat() || this.currentLocation.geometry.location.lat;
-    let longitude = this.currentLocation.geometry.location.lng() || this.currentLocation.geometry.location.lng;
-    weatherService.getWoeByLatLong(latitude + "," + longitude).subscribe(result => {
+  /**
+   *
+   * @param weatherService
+   */
+  onLocationChange() {
+    this.isLoading = true;
+    this.currentLocation = this.loadedLocation;
+    let geometryLocation = this.currentLocation.geometry.location;
+    let latitude = (typeof geometryLocation.lat === 'function') ? geometryLocation.lat() : geometryLocation.lat;
+    let longitude = (typeof geometryLocation.lng === 'function') ? geometryLocation.lng() : geometryLocation.lng;
+    this.weatherService.getWoeByLatLong(latitude + "," + longitude).subscribe(result => {
       if (result && result.length > 0) {
         this.weatherService.getWeatherByWoeId(result[0]['woeid']).subscribe(result => {
           this.weatherDetails = result;
@@ -151,8 +160,8 @@ export class WeatherComponent implements OnInit, AfterViewInit {
   }
 
   saveLocation() {
-    this.location.setValue((document.getElementById('txtPlaces')  as HTMLTextAreaElement).value);
-    this.weatherService.addLocation(this.location.value);
+    /*this.location.setValue((document.getElementById('txtPlaces')  as HTMLTextAreaElement).value);*/
+    this.weatherService.addLocation(this.loadedLocation);
     this.locations = this.weatherService.getAllLocation();
   }
 
@@ -164,9 +173,23 @@ export class WeatherComponent implements OnInit, AfterViewInit {
 
   }
 
+  refreshTemperature() {
+    this.getWeatherByLocation(this.loadedLocation);
+  }
+
   getWeatherByLocation(location) {
-    this.location.setValue(location);
-    this.google.maps.event.trigger(window['weatherComponentLA'], 'place_changed');
+    this.loadedLocation = location;
+    this.location.setValue(location.formatted_address);
+    this.onLocationChange();
+   /* this.isLoading = true;
+    this.weatherService.getWoeByLatLong(location.geometry.location.lat + "," + location.geometry.location.lng).subscribe(result => {
+      if (result && result.length > 0) {
+        this.weatherService.getWeatherByWoeId(result[0]['woeid']).subscribe(result => {
+          this.setWeatherDetails(result);
+          this.isLoading = false;
+        });
+      }
+    });*/
   }
 
   patchDigest() {

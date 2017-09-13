@@ -23,7 +23,7 @@
                   (click)="toggleTemperature()">
             <md-icon>compare_arrows</md-icon>
           </button>
-          <button mdTooltip="Refresh Now" mdTooltipPosition="above" md-mini-fab color="primary">
+          <button mdTooltip="Refresh Now" mdTooltipPosition="above" md-mini-fab color="primary" (click)="refreshTemperature()">
             <md-icon>refresh</md-icon>
           </button>
           <button mdTooltip="Next 5 days prediction" mdTooltipPosition="above" md-mini-fab color="primary"
@@ -73,7 +73,7 @@
           </tr>
           <tr>
             <td>the_temp</td>
-            <td>{{weatherDetails.consolidated_weather[0].the_temp}}</td>
+            <td>{{weatherDetails.consolidated_weather[0].the_temp | number : '1.2-2'}}</td>
           </tr>
           <tr>
             <td>visibility</td>
@@ -143,7 +143,7 @@
           </tr>
           <tr>
             <td>the_temp</td>
-            <td>{{weatherDetails.consolidated_weather[0].the_temp}}</td>
+            <td>{{weatherDetails.consolidated_weather[0].the_temp | number : '1.2-2'}}</td>
           </tr>
           <tr>
             <td>visibility</td>
@@ -243,8 +243,8 @@
       <table>
         <tbody>
         <tr *ngFor="let location of locations">
-          <td><i (click)="getWeatherByLocation(location)" class="material-icons cursor-pointer" mdTooltipPosition="right" mdTooltip="Hows weather at {{location}}?">remove_red_eye</i></td>
-          <td>{{location}}</td>
+          <td><i (click)="getWeatherByLocation(location)" class="material-icons cursor-pointer" mdTooltipPosition="right" mdTooltip="Hows weather at {{location.formatted_address}}?">remove_red_eye</i></td>
+          <td>{{location.formatted_address}}</td>
         </tr>
         </tbody>
       </table>
