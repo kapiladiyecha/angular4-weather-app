@@ -4,7 +4,8 @@
     <div fxLayout="row">
 
       <div fxFlex="15%">
-        <h1>{{weatherDetails.consolidated_weather[0].the_temp | number : '1.2-2'}} <span [innerHTML]="tempFactor"></span></h1>
+        <h1 *ngIf="!isFahrenheit;else fahrenheit">{{weatherDetails.consolidated_weather[0].the_temp | number : '1.2-2'}} &deg;C</h1>
+          <ng-template #fahrenheit><h1>{{(weatherDetails.consolidated_weather[0].the_temp | number : '1.2-2') * 9/5 + 32}} &deg;F</h1></ng-template>
         <form [formGroup]="locationForm" id="locationForm" class="example-form">
           <md-form-field class="example-full-width">
             <input mdInput placeholder="Location" id="txtPlaces"
