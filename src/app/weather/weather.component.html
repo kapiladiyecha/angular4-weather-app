@@ -1,9 +1,17 @@
 <md-progress-bar mode="indeterminate" *ngIf="isLoading"></md-progress-bar>
-<md-card *ngIf="currentLocation && currentLocation.formatted_address && weatherDetails">
-  <md-card-content fxLayout="column">
+<md-card class="bg-cover-size weather-bg-state-{{weatherDetails.consolidated_weather[0].weather_state_abbr}}" *ngIf="currentLocation && currentLocation.formatted_address && weatherDetails">
+  <md-card-content fxLayout="column" style="background: rgba(255, 255, 255, 0.61); padding: 10px; border-radius: 2px;">
     <div fxLayout="row">
 
       <div fxFlex="15%">
+        <img width="50" src="https://www.metaweather.com/static/img/weather/{{weatherDetails.consolidated_weather[0].weather_state_abbr}}.svg" />
+        <br/>
+        <dd class="wind">
+          <span class="label">{{weatherDetails.consolidated_weather[0].weather_state_name}}</span>
+          <br/>
+          <span class="dir dir-{{weatherDetails.consolidated_weather[0].wind_direction_compass}}" title="{{weatherDetails.consolidated_weather[0].wind_direction_compass}}"></span>
+          {{weatherDetails.consolidated_weather[0].wind_speed | number : '1.2-2'}} mph
+        </dd>
         <h1 *ngIf="!isFahrenheit;else fahrenheit">{{weatherDetails.consolidated_weather[0].the_temp | number : '1.2-2'}} &deg;C</h1>
           <ng-template #fahrenheit><h1>{{(weatherDetails.consolidated_weather[0].the_temp | number : '1.2-2') * 9/5 + 32}} &deg;F</h1></ng-template>
         <form [formGroup]="locationForm" id="locationForm" class="example-form">
@@ -34,18 +42,22 @@
         </div>
 
       </div>
-      <div fxFlex fxLayoutAlign="end" *ngIf="!isForecast">
+      <div class="fade" fxFlex fxLayoutAlign="end" *ngIf="!isForecast">
 
         <table class="tbl-weather-details">
           <thead>
           <tr>
-            <th>Properties</th>
-            <th>{{weatherDetails.consolidated_weather[0].applicable_date}}</th>
+            <th></th>
+            <th>
+              <img width="20" src="https://www.metaweather.com/static/img/weather/{{weatherDetails.consolidated_weather[0].weather_state_abbr}}.svg" />
+              <br/>
+              {{weatherDetails.consolidated_weather[0].applicable_date}}
+            </th>
           </tr>
           </thead>
           <tbody>
           <tr>
-            <td>air_pressure</td>
+            <td>Air Pressure</td>
             <td>{{weatherDetails.consolidated_weather[0].air_pressure | number : '1.2-2'}}</td>
           </tr>
           <!--<tr>
@@ -57,65 +69,69 @@
             <td>{{weatherDetails.consolidated_weather[0].created | date:'medium'}}</td>
           </tr>-->
           <tr>
-            <td>humidity</td>
+            <td>Humidity</td>
             <td>{{weatherDetails.consolidated_weather[0].humidity}}</td>
           </tr>
           <tr>
-            <td>max_temp</td>
+            <td>Max Temp</td>
             <td>{{weatherDetails.consolidated_weather[0].max_temp | number : '1.2-2'}}</td>
           </tr>
           <tr>
-            <td>min_temp</td>
+            <td>Min Temp</td>
             <td>{{weatherDetails.consolidated_weather[0].min_temp | number : '1.2-2'}}</td>
           </tr>
           <tr>
-            <td>predictability</td>
+            <td>Predictability</td>
             <td>{{weatherDetails.consolidated_weather[0].predictability}}</td>
           </tr>
           <tr>
-            <td>the_temp</td>
+            <td>Current Temp</td>
             <td>{{weatherDetails.consolidated_weather[0].the_temp | number : '1.2-2'}}</td>
           </tr>
           <tr>
-            <td>visibility</td>
+            <td>Visibility</td>
             <td>{{weatherDetails.consolidated_weather[0].visibility | number : '1.2-2'}}</td>
           </tr>
-          <tr>
+          <!--<tr>
             <td>weather_state_abbr</td>
             <td>{{weatherDetails.consolidated_weather[0].weather_state_abbr}}</td>
-          </tr>
+          </tr>-->
           <tr>
-            <td>weather_state_name</td>
+            <td>Weather State</td>
             <td>{{weatherDetails.consolidated_weather[0].weather_state_name}}</td>
           </tr>
           <tr>
-            <td>wind_direction</td>
+            <td>Wind Angle</td>
             <td>{{weatherDetails.consolidated_weather[0].wind_direction | number : '1.2-2'}}</td>
           </tr>
           <tr>
-            <td>wind_direction_compass</td>
-            <td>{{weatherDetails.consolidated_weather[0].wind_direction_compass}}</td>
+            <td>Wind Direction</td>
+            <td><span class="dir dir-{{weatherDetails.consolidated_weather[0].wind_direction_compass}}" title="{{weatherDetails.consolidated_weather[0].wind_direction_compass}}"></span></td>
           </tr>
           <tr>
-            <td>wind_speed</td>
-            <td>{{weatherDetails.consolidated_weather[0].wind_speed | number : '1.2-2'}}</td>
+            <td>Wind Speed</td>
+            <td>{{weatherDetails.consolidated_weather[0].wind_speed | number : '1.2-2'}} mph</td>
           </tr>
           </tbody>
         </table>
 
       </div>
-      <div fxFlex *ngIf="isForecast" fxLayoutAlign="end">
+      <div class="fade" fxFlex *ngIf="isForecast" fxLayoutAlign="end">
 
         <table class="tbl-weather-details">
           <thead>
           <tr>
-            <th>Properties</th>
-            <th>{{weatherDetails.consolidated_weather[0].applicable_date}}</th>
+            <th></th>
+            <th>
+              <img width="20" src="https://www.metaweather.com/static/img/weather/{{weatherDetails.consolidated_weather[0].weather_state_abbr}}.svg" />
+              <br/>
+              {{weatherDetails.consolidated_weather[0].applicable_date}}
+            </th>
           </tr>
           </thead>
           <tbody>
           <tr>
-            <td>air_pressure</td>
+            <td>Air Pressure</td>
             <td>{{weatherDetails.consolidated_weather[0].air_pressure | number : '1.2-2'}}</td>
           </tr>
           <!--<tr>
@@ -127,55 +143,59 @@
              <td>{{weatherDetails.consolidated_weather[0].created | date:'medium'}}</td>
            </tr>-->
           <tr>
-            <td>humidity</td>
+            <td>Humidity</td>
             <td>{{weatherDetails.consolidated_weather[0].humidity}}</td>
           </tr>
           <tr>
-            <td>max_temp</td>
+            <td>Max Temp</td>
             <td>{{weatherDetails.consolidated_weather[0].max_temp | number : '1.2-2'}}</td>
           </tr>
           <tr>
-            <td>min_temp</td>
+            <td>Min Temp</td>
             <td>{{weatherDetails.consolidated_weather[0].min_temp | number : '1.2-2'}}</td>
           </tr>
           <tr>
-            <td>predictability</td>
+            <td>Predictability</td>
             <td>{{weatherDetails.consolidated_weather[0].predictability}}</td>
           </tr>
           <tr>
-            <td>the_temp</td>
+            <td>Current Temp</td>
             <td>{{weatherDetails.consolidated_weather[0].the_temp | number : '1.2-2'}}</td>
           </tr>
           <tr>
-            <td>visibility</td>
+            <td>Visibility</td>
             <td>{{weatherDetails.consolidated_weather[0].visibility | number : '1.2-2'}}</td>
           </tr>
-          <tr>
+          <!--<tr>
             <td>weather_state_abbr</td>
             <td>{{weatherDetails.consolidated_weather[0].weather_state_abbr}}</td>
-          </tr>
+          </tr>-->
           <tr>
-            <td>weather_state_name</td>
+            <td>Weather State</td>
             <td>{{weatherDetails.consolidated_weather[0].weather_state_name}}</td>
           </tr>
           <tr>
-            <td>wind_direction</td>
+            <td>Wind Angle</td>
             <td>{{weatherDetails.consolidated_weather[0].wind_direction | number : '1.2-2'}}</td>
           </tr>
           <tr>
-            <td>wind_direction_compass</td>
-            <td>{{weatherDetails.consolidated_weather[0].wind_direction_compass}}</td>
+            <td>Wind Direction</td>
+            <td><span class="dir dir-{{weatherDetails.consolidated_weather[0].wind_direction_compass}}" title="{{weatherDetails.consolidated_weather[0].wind_direction_compass}}"></span></td>
           </tr>
           <tr>
-            <td>wind_speed</td>
-            <td>{{weatherDetails.consolidated_weather[0].wind_speed | number : '1.2-2'}}</td>
+            <td>Wind Speed</td>
+            <td>{{weatherDetails.consolidated_weather[0].wind_speed | number : '1.2-2'}} mph</td>
           </tr>
           </tbody>
         </table>
         <table class="tbl-weather-details" *ngFor="let predWeather of weatherDetails.consolidated_weather | slice:1">
           <thead>
           <tr>
-            <th>{{predWeather.applicable_date}}</th>
+            <th>
+              <img width="20" src="https://www.metaweather.com/static/img/weather/{{predWeather.weather_state_abbr}}.svg" />
+              <br/>
+              {{predWeather.applicable_date}}
+            </th>
           </tr>
           </thead>
           <tbody>
@@ -208,9 +228,9 @@
           <tr>
             <td>{{predWeather.visibility || '0' | number : '1.2-2'}}</td>
           </tr>
-          <tr>
+          <!--<tr>
             <td>{{predWeather.weather_state_abbr}}</td>
-          </tr>
+          </tr>-->
           <tr>
             <td>{{predWeather.weather_state_name}}</td>
           </tr>
@@ -218,10 +238,10 @@
             <td>{{predWeather.wind_direction | number : '1.2-2'}}</td>
           </tr>
           <tr>
-            <td>{{predWeather.wind_direction_compass}}</td>
+            <td><span class="dir dir-{{predWeather.wind_direction_compass}}" title="{{predWeather.wind_direction_compass}}"></span></td>
           </tr>
           <tr>
-            <td>{{predWeather.wind_speed | number : '1.2-2'}}</td>
+            <td>{{predWeather.wind_speed | number : '1.2-2'}} mph</td>
           </tr>
           </tbody>
         </table>
@@ -232,19 +252,21 @@
 
     <br/>
     <div fxLayout="row" fxLayoutAlign="end">
-      <span style="font-size: 11px;">Your location:{{currentLocation.formatted_address}}</span>
+      <span style="font-size: 11px;">Shown location: {{currentLocation.formatted_address}}</span>
     </div>
   </md-card-content>
 </md-card>
 <br/>
 <br/>
-<md-card>
+<md-card *ngIf="locations.length > 0">
   <md-card-content>
+    <h2>Favourite places</h2>
     <div>
       <table>
         <tbody>
-        <tr *ngFor="let location of locations">
-          <td><i (click)="getWeatherByLocation(location)" class="material-icons cursor-pointer" mdTooltipPosition="right" mdTooltip="Hows weather at {{location.formatted_address}}?">remove_red_eye</i></td>
+        <tr *ngFor="let location of locations;let i = index">
+          <td><i (click)="getWeatherByLocation(location)" class="material-icons cursor-pointer" mdTooltipPosition="right" mdTooltip="Hows weather at {{location.formatted_address}}?">remove_red_eye</i>
+            <i (click)="removeLocation(i)" class="material-icons cursor-pointer" mdTooltipPosition="right" mdTooltip="Delete">delete</i></td>
           <td>{{location.formatted_address}}</td>
         </tr>
         </tbody>
